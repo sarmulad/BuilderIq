@@ -33,20 +33,28 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "BuilderIQ - Premium Builder Intelligence Platform",
+    title: "BuilderIQ.IN - Know Every Builder Deal in Indiana",
     description:
-      "Know every builder's deal before your buyers do. The most sophisticated real estate intelligence platform for professionals.",
-    url: "https://builderiq.com",
+      "AI-powered builder incentive intelligence for Indiana real estate professionals. Track D.R. Horton, Lennar, M/I Homes, and more.",
+    url: "https://builderiq.in",
     siteName: "BuilderIQ",
     images: [
       {
-        url: "/hero-new-construction-home.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "BuilderIQ - Premium Builder Intelligence Platform",
+        alt: "BuilderIQ - Indiana Builder Intelligence Platform",
       },
     ],
+    locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BuilderIQ.IN - Know Every Builder Deal in Indiana",
+    description:
+      "AI-powered builder incentive intelligence for Indiana real estate professionals.",
+    images: ["/og-image.jpg"],
   },
 };
 

@@ -14,21 +14,48 @@ import {
   Mail,
   Clock,
   Sparkles,
-  Building2,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/lib/supabase/client";
 
 export default function HomePage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Handle email signup via Supabase
-    console.log("[v0] Email submitted:", email);
-    setSubmitted(true);
-    setEmail("");
-    setTimeout(() => setSubmitted(false), 3000);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error: insertError } = await supabase.from("waitlist").insert([
+        {
+          email,
+          user_type: "other",
+          referral_source: "landing_page",
+        },
+      ]);
+
+      if (insertError) {
+        // Handle duplicate email gracefully
+        if (insertError.code === "23505") {
+          setError("You're already on the list!");
+        } else {
+          throw insertError;
+        }
+      } else {
+        setSubmitted(true);
+        setEmail("");
+        setTimeout(() => setSubmitted(false), 5000);
+      }
+    } catch (err) {
+      console.error("[v0] Email submission error:", err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -407,15 +434,22 @@ export default function HomePage() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="bg-white text-foreground flex-1 h-14 text-lg"
                     required
+                    disabled={isLoading}
                   />
                   <Button
                     type="submit"
-                    className="bg-yellow-400 text-[#8B0000] hover:bg-yellow-300 h-14 px-8 font-bold text-lg shadow-xl"
+                    disabled={isLoading}
+                    className="bg-yellow-400 text-[#8B0000] hover:bg-yellow-300 h-14 px-8 font-bold text-lg shadow-xl disabled:opacity-50"
                   >
                     <Bell className="mr-2" size={20} />
-                    Reserve My Spot
+                    {isLoading ? "Joining..." : "Reserve My Spot"}
                   </Button>
                 </div>
+                {error && (
+                  <p className="text-yellow-300 text-sm mt-2 bg-white/10 backdrop-blur-sm rounded-lg py-2 px-4">
+                    {error}
+                  </p>
+                )}
               </form>
 
               <p className="text-white/80 text-sm">
@@ -541,7 +575,7 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-[#b22222] to-[#FF4500] rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
-                  <Building2 className="text-white" size={24} />
+                  <Users className="text-white" size={24} />
                 </div>
                 <div>
                   <span className="font-serif font-bold text-3xl">
@@ -573,7 +607,7 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-              {/* <div className="flex gap-4 mt-6">
+              <div className="flex gap-4 mt-6">
                 <Link
                   href="#"
                   className="text-white/60 hover:text-[#FF6B6B] transition"
@@ -598,7 +632,7 @@ export default function HomePage() {
                 >
                   YouTube
                 </Link>
-              </div> */}
+              </div>
             </div>
           </div>
 
