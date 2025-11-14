@@ -573,7 +573,7 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-              <div className="flex gap-4 mt-6">
+              {/* <div className="flex gap-4 mt-6">
                 <Link
                   href="#"
                   className="text-white/60 hover:text-[#FF6B6B] transition"
@@ -598,7 +598,7 @@ export default function HomePage() {
                 >
                   YouTube
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
 
