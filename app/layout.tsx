@@ -1,11 +1,14 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Playfair_Display } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import "./globals.css"
-import { CookiesBanner } from "@/components/cookies-banner"
+import type React from "react";
+import type { Metadata } from "next";
+import { Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
+import { CookiesBanner } from "@/components/cookies-banner";
 
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" })
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   title: "BuilderIQ - Premium Builder Intelligence Platform",
@@ -29,18 +32,37 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
-}
+  openGraph: {
+    title: "BuilderIQ - Premium Builder Intelligence Platform",
+    description:
+      "Know every builder's deal before your buyers do. The most sophisticated real estate intelligence platform for professionals.",
+    url: "https://builderiq.com",
+    siteName: "BuilderIQ",
+    images: [
+      {
+        url: "/hero-new-construction-home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "BuilderIQ - Premium Builder Intelligence Platform",
+      },
+    ],
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" className={playfair.variable}>
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" />
-        <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className={`font-sans antialiased`}>
         {children}
@@ -48,5 +70,5 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
-  )
+  );
 }
