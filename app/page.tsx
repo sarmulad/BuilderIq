@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase/client";
+import { sendWaitlistEmail } from "@/app/actions/send-email";
 
 export default function HomePage() {
   const [email, setEmail] = useState("");
@@ -30,6 +31,7 @@ export default function HomePage() {
     setError(null);
 
     try {
+      // Insert into Supabase waitlist table
       const { error: insertError } = await supabase.from("waitlist").insert([
         {
           email,
@@ -39,19 +41,24 @@ export default function HomePage() {
       ]);
 
       if (insertError) {
-        // Handle duplicate email gracefully
         if (insertError.code === "23505") {
           setError("You're already on the list!");
         } else {
           throw insertError;
         }
       } else {
+        try {
+          await sendWaitlistEmail(email, undefined, "other");
+        } catch (emailError) {
+          console.error(" Email send error:", emailError);
+        }
+
         setSubmitted(true);
         setEmail("");
         setTimeout(() => setSubmitted(false), 5000);
       }
     } catch (err) {
-      console.error("[v0] Email submission error:", err);
+      console.error(" Email submission error:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -214,7 +221,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
-              Built for Indiana. Built for Builders.
+              Built for Indiana. Built for Home Builders.
             </h2>
           </div>
 
@@ -607,32 +614,20 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-              <div className="flex gap-4 mt-6">
-                <Link
-                  href="#"
-                  className="text-white/60 hover:text-[#FF6B6B] transition"
-                >
+              {/* <div className="flex gap-4 mt-6">
+                <Link href="#" className="text-white/60 hover:text-[#FF6B6B] transition">
                   Instagram
                 </Link>
-                <Link
-                  href="#"
-                  className="text-white/60 hover:text-[#FF6B6B] transition"
-                >
+                <Link href="#" className="text-white/60 hover:text-[#FF6B6B] transition">
                   Facebook
                 </Link>
-                <Link
-                  href="#"
-                  className="text-white/60 hover:text-[#FF6B6B] transition"
-                >
+                <Link href="#" className="text-white/60 hover:text-[#FF6B6B] transition">
                   LinkedIn
                 </Link>
-                <Link
-                  href="#"
-                  className="text-white/60 hover:text-[#FF6B6B] transition"
-                >
+                <Link href="#" className="text-white/60 hover:text-[#FF6B6B] transition">
                   YouTube
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
 
